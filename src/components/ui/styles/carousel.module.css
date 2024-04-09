@@ -6,13 +6,14 @@
   width: 100%;
   padding-top: 50px;
   padding-bottom: 50px;
+ 
 }
 
 .swiperslide {
   background-position: center;
   background-size: cover;
   width: 300px;
-  height: 400px;
+  height: 370px;
 }
 
 .swiperslide img {
@@ -21,28 +22,15 @@
 }
 
 
-.reflect {
-  -webkit-box-reflect: below 10px linear-gradient(to bottom right, rgba(0,0,0,0.0), rgba(0,0,0,0.4));
-}
 
-.reflect::after {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 10%; /* Adjust the height of the reflection as needed */
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
-  transform: scaleY(-1) rotate(-45deg); /* Tilt the reflection */
-  opacity: 0.3;
-}
 
 .mySwiper .swiper-slide .reflect {
-  opacity: 0.8; /* Opacity for non-active slides */
-  transition: opacity 0.3s ease; /* Transition for smooth change of opacity */
+  opacity: 0.5;  /* Opacity for non-active slides */
+  transform: scale(0.9); /* Scale down non-active slides */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Transition for smooth change of opacity and size */
 }
 
 .mySwiper .swiper-slide-active .reflect {
   opacity: 1; /* Opacity for active slide */
+  transform: scale(1); /* Scale up active slide */
 }

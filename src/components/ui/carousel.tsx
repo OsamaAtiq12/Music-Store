@@ -1,22 +1,43 @@
-import React, { useRef, useState } from 'react';
-// Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
-
-// Import Swiper styles
+import React, { useRef, useEffect, useState } from 'react';
+import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import styles from './styles/carousel.module.css';
+import Card from './Card';
+import { EffectCoverflow, Navigation } from 'swiper/modules';
 
 
-// import required modules
-import { EffectCoverflow, Pagination ,Navigation } from 'swiper/modules';
 
-export default function Carousel() {
+interface CarouselProps {
+  data: any; // Replace 'any' with the actual type of 'data'
+}
+
+const Carousel: React.FC<CarouselProps> = ({ data }) => {
+  
+  const swiperRef = useRef<SwiperRef>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+
+  useEffect(() => {
+    const swiperInstance = swiperRef.current?.swiper;
+    if (swiperInstance) {
+      const slideChangeHandler = () => {
+        setActiveIndex(swiperInstance.activeIndex);
+      };
+      swiperInstance.on('slideChange', slideChangeHandler);
+      return () => {
+        swiperInstance.off('slideChange', slideChangeHandler);
+      };
+    }
+  }, []);
+
+
   return (
     <>
       <Swiper
+        ref={swiperRef}
         effect={'coverflow'}
         navigation={true}
         grabCursor={true}
@@ -29,38 +50,28 @@ export default function Carousel() {
           modifier: 1,
           slideShadows: true,
         }}
-        pagination={true}
-        modules={[EffectCoverflow, Navigation, Pagination]}
+        modules={[EffectCoverflow, Navigation]}
         className={styles.mySwiper}
       >
-        <SwiperSlide className={styles.swiperslide}>
-          <img className={styles.reflect} src="https://swiperjs.com/demos/images/nature-1.jpg" />
-        </SwiperSlide>
-        <SwiperSlide className={styles.swiperslide}>
-          <img className={styles.reflect} src="https://swiperjs.com/demos/images/nature-2.jpg" />
-        </SwiperSlide   >
-        <SwiperSlide className={styles.swiperslide}>
-          <img className={styles.reflect} src="https://swiperjs.com/demos/images/nature-3.jpg" />
-        </SwiperSlide>
-        <SwiperSlide className={styles.swiperslide}>
-          <img className={styles.reflect} src="https://swiperjs.com/demos/images/nature-4.jpg" />
-        </SwiperSlide>
-        <SwiperSlide className={styles.swiperslide}>
-          <img className={styles.reflect} src="https://swiperjs.com/demos/images/nature-5.jpg" />
-        </SwiperSlide>
-        <SwiperSlide className={styles.swiperslide}>
-          <img className={styles.reflect} src="https://swiperjs.com/demos/images/nature-6.jpg" />
-        </SwiperSlide>
-        <SwiperSlide className={styles.swiperslide}>
-          <img className={styles.reflect} src="https://swiperjs.com/demos/images/nature-7.jpg" />
-        </SwiperSlide>
-        <SwiperSlide className={styles.swiperslide}>
-          <img className={styles.reflect} src="https://swiperjs.com/demos/images/nature-8.jpg" />
-        </SwiperSlide>
-        <SwiperSlide className={styles.swiperslide}>
-          <img className={styles.reflect} src="https://swiperjs.com/demos/images/nature-9.jpg" />
-        </SwiperSlide>
+        {data &&
+          data.tracks.items
+            .filter((item: any) => item.track.preview_url) // Filter out items without preview_url
+            .map((item: any, index: number) => (
+              <SwiperSlide key={item.track.id} className={styles.swiperslide}>
+                <Card
+                  key={item.track.id}
+                  imageUrl={item.track.album.images[0].url}
+                  audioUrl={item.track.preview_url}
+                  albumName={item.track.album.name}
+                  name={item.track.name}
+                  isActive={activeIndex === index}
+                />
+              </SwiperSlide>
+            ))
+        }
       </Swiper>
     </>
   );
-}
+};
+
+export default Carousel;
