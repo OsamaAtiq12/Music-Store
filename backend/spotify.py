@@ -72,7 +72,6 @@ def get_track_features_and_track_names(sp, playlist_id, username="azhar"):
                 )
             else:
                 features.append(audio_features)
-
     return features, track_names, sourcePlaylist
 
 
@@ -96,10 +95,15 @@ def initialize_pd_with_vector(features, track_names):
         ]
     ]
 
+    # Convert 'id' to string
+
     v = TfidfVectorizer(sublinear_tf=True, ngram_range=(1, 6), max_features=10000)
     row_unique = v.fit_transform(track_names)
     play_listDF.insert(0, "track_name", track_names)
     play_listDF["ratings"] = np.nan
+
+    play_listDF["track_name"] = play_listDF["track_name"].astype("string")
+    play_listDF["id"] = play_listDF["id"].astype("string")
 
     return play_listDF, row_unique, v
 
@@ -108,12 +112,11 @@ def map_rating_with_df(play_listDF, ratings_dict):
     for rating_info in ratings_dict:
         song_id = rating_info.get("song_id")
         rating = rating_info.get("rating")
-
         if song_id and rating:
             # Check if the song ID exists in play_listDF
-            if song_id in play_listDF.index:
+            if song_id in play_listDF["id"].values:
                 # Update the 'ratings' column with the provided rating
-                play_listDF.loc[song_id, "ratings"] = rating
+                play_listDF.loc[play_listDF["id"] == song_id, "ratings"] = rating
             else:
                 print(f"Song with ID {song_id} not found in play_listDF.")
         else:
