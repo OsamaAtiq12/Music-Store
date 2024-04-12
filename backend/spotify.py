@@ -13,31 +13,11 @@ from sklearn.model_selection import StratifiedKFold, GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from spotipy.oauth2 import SpotifyClientCredentials
-import spotipy.util as util
 
 
 def authenticate_spotify(token):
     try:
-        cid = "fe51a4736e244e8a8148f8b8e9a8d77a"
-        secret = "0adc3e2d66884717a841ca016847976"
-        username = "Marvin"  # Your Spotify username
-        redirect_uri = (
-            "https://developer.spotify.com/dashboard/fe51a4736e244e8a8148f8b8e9a8d77a"
-        )
-        scope = "user-library-read playlist-modify-public playlist-read-private"
-        client_credentials_manager = SpotifyClientCredentials(
-            client_id="fe51a4736e244e8a8148f8b8e9a8d77a",
-            client_secret="0adc3e2d66884717a841ca016847976",
-        )
-        sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-        au_token = util.prompt_for_user_token(
-            username,
-            scope,
-            client_id=cid,
-            client_secret=secret,
-            redirect_uri=redirect_uri,
-        )
-        sp = spotipy.Spotify(auth=au_token)
+        sp = spotipy.Spotify(auth=token)
         return sp
     except Exception as exc:
         print("Can't get token for", exc)
@@ -48,7 +28,7 @@ def _chunker(seq, size):
     return (seq[pos : pos + size] for pos in range(0, len(seq), size))
 
 
-def get_track_features_and_track_names(sp, playlist_id, username="Marvin"):
+def get_track_features_and_track_names(sp, playlist_id, username="azhar"):
     sourcePlaylist = sp.user_playlist(username, playlist_id)
     tracks = sourcePlaylist["tracks"]
     songs = tracks["items"]
@@ -126,14 +106,19 @@ def initialize_pd_with_vector(features, track_names):
 
 
 def map_rating_with_df(play_listDF, ratings_dict):
-    # Iterate over the ratings_dict and update the 'ratings' column in play_listDF
-    for song_id, rating in ratings_dict.items():
-        # Check if the song ID exists in play_listDF
-        if song_id in play_listDF.index:
-            # Update the 'ratings' column with the provided rating
-            play_listDF.loc[song_id, "ratings"] = rating
+    for rating_info in ratings_dict:
+        song_id = rating_info.get("song_id")
+        rating = rating_info.get("rating")
+
+        if song_id and rating:
+            # Check if the song ID exists in play_listDF
+            if song_id in play_listDF.index:
+                # Update the 'ratings' column with the provided rating
+                play_listDF.loc[song_id, "ratings"] = rating
+            else:
+                print(f"Song with ID {song_id} not found in play_listDF.")
         else:
-            print(f"Song with ID {song_id} not found in play_listDF.")
+            print(f"Invalid rating information for song: {rating_info}")
 
     return play_listDF
 
