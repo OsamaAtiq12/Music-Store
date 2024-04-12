@@ -1,3 +1,3 @@
 ```
-python-version -> 3.12
+python-version -> 3.10
 ```
