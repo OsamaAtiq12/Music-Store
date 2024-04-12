@@ -12,7 +12,6 @@ from scipy.sparse import csr_matrix, hstack
 from sklearn.model_selection import StratifiedKFold, GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from spotipy.oauth2 import SpotifyClientCredentials
 
 
 def authenticate_spotify(token):
