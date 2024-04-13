@@ -45,6 +45,7 @@ def generate_playlist(playlist_input: PlaylistData):
     )
     print("initialize_pd_with_vector called")
     play_listDF, row_unique, v = initialize_pd_with_vector(features, track_names)
+
     print("map_rating_with_df called")
     rating_mapped_df = map_rating_with_df(play_listDF, song_data_dict_list)
     print("train_predict_and_create_playlist called")
