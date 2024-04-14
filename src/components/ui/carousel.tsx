@@ -6,7 +6,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import styles from './styles/carousel.module.css';
 import Card from './Card';
-import { EffectCoverflow, Navigation } from 'swiper/modules';
+import { Mousewheel ,EffectCoverflow, Navigation } from 'swiper/modules';
 
 
 
@@ -33,12 +33,16 @@ const Carousel: React.FC<CarouselProps> = ({ data }) => {
     }
   }, []);
 
+  
+
 
   return (
     <>
       <Swiper
+      onScroll={(e) => console.log(e)}
         ref={swiperRef}
         effect={'coverflow'}
+        mousewheel={true}
         navigation={true}
         grabCursor={true}
         centeredSlides={true}
@@ -50,7 +54,7 @@ const Carousel: React.FC<CarouselProps> = ({ data }) => {
           modifier: 1,
           slideShadows: true,
         }}
-        modules={[EffectCoverflow, Navigation]}
+        modules={[EffectCoverflow, Navigation ,Mousewheel]}
         className={styles.mySwiper}
       >
         {data &&

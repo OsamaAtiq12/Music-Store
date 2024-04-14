@@ -14,32 +14,39 @@ function SpotifyLogin() {
   const AUTH_URL = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${encodeURIComponent(SCOPES)}&response_type=token`;
 
   const [token, setToken] = useState("");
-
+ const [expiresIn, setExpiresIn] = useState("");
   useEffect(() => {
     if (token) {
-      router.push('/SearchPlaylist');
+      router.push('/home');
     }
   }, [token]);
 
   useEffect(() => {
     const hash = window.location.hash;
     let token = window.localStorage.getItem("token");
-
+    let expiresIn = window.localStorage.getItem("expires_in");
+  
     if (!token && hash) {
       const foundToken = hash
         .substring(1)
         .split("&")
         .find((elem) => elem.startsWith("access_token"));
-
+  
       if (foundToken) {
         token = foundToken.split("=")[1];
-
+        expiresIn = hash
+          .substring(1)
+          .split("&")
+          .find((elem) => elem.startsWith("expires_in"))?.split("=")[1]||"";	
+  
         window.location.hash = "";
-        window.localStorage.setItem("token", token);
+        window.localStorage.setItem("token", token || ""); // Provide a default value for token
+        window.localStorage.setItem("expires_in", expiresIn || ""); // Provide a default value for expiresIn
       }
     }
-
+  
     setToken(token || "");
+    setExpiresIn(expiresIn || "");
   }, []);
 
   const logout = () => {
