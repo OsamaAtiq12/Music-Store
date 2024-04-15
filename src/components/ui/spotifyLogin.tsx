@@ -6,9 +6,9 @@ import background from "../../Assets/background.jpg";
 
 function SpotifyLogin() {
   const router = useRouter();
-  const CLIENT_ID = "4df63b7a0b764cc7855ac658356312f4";
-  const REDIRECT_URI = "http://localhost:3000";
-  const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
+  const CLIENT_ID = process.env.CLIENT_ID;
+  const REDIRECT_URI = process.env.REDIRECT_URI;
+  const AUTH_ENDPOINT = process.env.AUTH_ENDPOINT;
 
   const SCOPES = 'playlist-read-private';
   const AUTH_URL = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${encodeURIComponent(SCOPES)}&response_type=token`;

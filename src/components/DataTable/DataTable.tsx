@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import like from "../../Assets/like.png";
 import dislike from "../../Assets/dislike.png";
@@ -23,6 +23,7 @@ export default function DataTable({
   const [selectedTrack, setSelectedTrack] = useAtom(currentTrackAtom);
   const [likedTracks, setLikedTracks] = useAtom(likedTracksAtom);
   const [dislikedTracks, setDislikedTracks] = useAtom(dislikedTracksAtom);
+  const [skippedRows, setSkippedRows] = useState<number[]>([]);
 
   const formatDuration = (duration: number) => {
     const minutes = Math.floor(duration / 60000);
@@ -64,6 +65,7 @@ export default function DataTable({
     const newData = [...data];
     newData.splice(index, 1);
     setFilteredData(newData);
+    setSkippedRows([...skippedRows, index]);
     onTrackAction(index);
   };
 
@@ -104,7 +106,11 @@ export default function DataTable({
                 <tr
                   key={item.trackId}
                   onClick={() => setSelectedTrack(item.previewUrl)}
-                  className="border-b border-gray-700 cursor-pointer hover:bg-gray-800 transition-colors duration-200 ease-in-out"
+                  className={`border-b border-gray-700 cursor-pointer hover:bg-gray-800 transition-colors duration-200 ease-in-out ${
+                    skippedRows.includes(index)
+                      ? "opacity-50 pointer-events-none"
+                      : ""
+                  }`}
                 >
                   <td className="px-4 py-3 w-1/12">{index + 1}</td>
                   <td className="px-4 py-3 w-1/12">
@@ -124,41 +130,73 @@ export default function DataTable({
                   <td className="px-4 py-3 w-1/12">
                     {formatDuration(item.duration)}
                   </td>
-                  <td >
-                    <div onClick={(e) => e.stopPropagation()} className="flex gap-2 py-6">
-                     <div className="shrink-0">
-                     <button
-                        className={`bg-[#fdfdfd] bg-opacity-20 hover:bg-slate-400 text-black font-semibold ${isLiked(item) ? "bg-green-500 bg-opacity-80" : ""
+                  <td>
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex gap-2 py-6"
+                    >
+                      <div className="shrink-0">
+                        <button
+                          className={`bg-[#fdfdfd] bg-opacity-20 hover:bg-slate-400 text-black font-semibold ${
+                            isLiked(item) ? "bg-green-500 bg-opacity-80" : ""
                           } `}
-                        onClick={() => handleLike(index)}
-                      >
-                        <Image src={like} alt="like" width={20} height={20} />
-                      </button>
-                     </div>
-
-                     <div className="shrink-0">
-                     <button
-                        className={`bg-[#fdfdfd] bg-opacity-20 hover:bg-slate-400 text-black font-semibold ${isDisliked(item) ? "bg-red-500 bg-opacity-80" : ""
+                          onClick={() => handleLike(index)}
+                          disabled={skippedRows.includes(index)}
+                        >
+                          <Image src={like} alt="like" width={20} height={20} />
+                        </button>
+                      </div>
+                      <div className="shrink-0">
+                        <button
+                          className={`bg-[#fdfdfd] bg-opacity-20 hover:bg-slate-400 text-black font-semibold ${
+                            isDisliked(item) ? "bg-red-500 bg-opacity-80" : ""
                           }`}
-                        onClick={() => handleDislike(index)}
+                          onClick={() => handleDislike(index)}
+                          disabled={skippedRows.includes(index)}
+                        >
+                          <Image
+                            src={dislike}
+                            alt="dislike"
+                            width={20}
+                            height={20}
+                          />
+                        </button>
+                      </div>
+                      <div
+                        className={`shrink-0 ${
+                          skippedRows.includes(index) ||
+                          isLiked(item) ||
+                          isDisliked(item)
+                            ? "cursor-not-allowed"
+                            : ""
+                        }`}
                       >
-                        <Image
-                          src={dislike}
-                          alt="dislike"
-                          width={20}
-                          height={20}
-                        />
-                      </button>
-                     </div>
-                     
-                    <div className="shrink-0">
-                    <button
-                        className="text-slate-400 hover:text-white text-[14px] font-extralight"
-                        onClick={() => handleSkip(index)}
-                      >
-                        Skip
-                      </button>
-                    </div>
+                        <button
+                          className="text-slate-400 hover:text-white text-[14px] font-extralight italic pr-10"
+                          onClick={(e) => {
+                            const button = e.target as HTMLButtonElement;
+                            button.textContent = "skipped";
+                            handleSkip(index);
+                          }}
+                          disabled={
+                            skippedRows.includes(index) ||
+                            isLiked(item) ||
+                            isDisliked(item)
+                          }
+                        >
+                          <span
+                            className={
+                              skippedRows.includes(index) ||
+                              isLiked(item) ||
+                              isDisliked(item)
+                                ? "cursor-not-allowed"
+                                : ""
+                            }
+                          >
+                            Skip
+                          </span>
+                        </button>
+                      </div>
                     </div>
                   </td>
                 </tr>
