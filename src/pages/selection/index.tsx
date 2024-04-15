@@ -17,15 +17,18 @@ function Selection() {
   const [likedTracks, setLikedTracks] = useAtom(likedTracksAtom);
   const [dislikedTracks, setDislikedTracks] = useAtom(dislikedTracksAtom);
   const [filteredData, setFilteredData] = useState<any[]>([]);
-
-  const shuffledTracks = useMemo(() => {
-    if (playlist.tracks && playlist.tracks.items) {
-      return [...playlist.tracks.items]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 20);
-    } else {
-      return [];
+  const shuffledTracks: any[] = useMemo(() => {
+    if (playlist) {
+      if (playlist.tracks && playlist.tracks.items) {
+        return [...playlist.tracks.items]
+          .filter(item => item.track && item.track.preview_url)
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 20);
+      } else {
+        return [];
+      }
     }
+    return [];
   }, [playlist]);
 
   const transformedData = useMemo(() => {
@@ -40,7 +43,7 @@ function Selection() {
       duration: track.track.duration_ms,
       previewUrl: track.track.preview_url,
       trackId: track.track.id,
-    }));
+    }))
   }, [shuffledTracks]);
 
   const handleTrackAction = (index: number) => {
@@ -52,7 +55,7 @@ function Selection() {
   return (
     <Layout>
       <div className="flex flex-col items-center justify-center gap-5 bg-gradient-to-tr from-black to-blue-950">
-        <h1 className="text-white text-4xl font-bold mt-5">
+        <h1 className="text-white text-4xl font-bold mt-[100px]">
           Rate Tracks For Recommendations
         </h1>
         <p className="text-white text-lg">

@@ -33,29 +33,25 @@ export default function DataTable({
   const handleLike = (index: number) => {
     const track = data[index];
     if (likedTracks.length >= 20) {
-      // Trim likedTracks array if it exceeds the limit
       setLikedTracks([...likedTracks.slice(1), track]);
     } else {
       setLikedTracks([...likedTracks, track]);
     }
-    // Remove the track from dislikedTracks if it exists
     setDislikedTracks(
       dislikedTracks.filter(
         (dTrack: { trackId: any }) => dTrack.trackId !== track.trackId
       )
     );
-    onTrackAction(index); // Trigger the onTrackAction callback with the index
+    onTrackAction(index);
   };
 
   const handleDislike = (index: number) => {
     const track = data[index];
     if (dislikedTracks.length >= 20) {
-      // Trim dislikedTracks array if it exceeds the limit
       setDislikedTracks([...dislikedTracks.slice(1), track]);
     } else {
       setDislikedTracks([...dislikedTracks, track]);
     }
-    // Remove the track from likedTracks if it exists
     setLikedTracks(
       likedTracks.filter(
         (lTrack: { trackId: any }) => lTrack.trackId !== track.trackId
@@ -65,10 +61,10 @@ export default function DataTable({
   };
 
   const handleSkip = (index: number) => {
-    const newData = [...data]; // Create a copy of the data array
-    newData.splice(index, 1); // Remove the track at the specified index
-    setFilteredData(newData); // Update the filtered data state
-    onTrackAction(index); // Trigger the onTrackAction callback with the index
+    const newData = [...data];
+    newData.splice(index, 1);
+    setFilteredData(newData);
+    onTrackAction(index);
   };
 
   const isLiked = (track: any) => {
@@ -86,7 +82,7 @@ export default function DataTable({
 
   return (
     <>
-      <div className="bg-black bg-opacity-20 text-white p-4">
+      <div className="bg-black bg-opacity-20 text-white p-4 overflow-x-hidden">
         <table className="w-full">
           <thead>
             <tr className="text-gray-400 border-b border-gray-700">
@@ -101,7 +97,7 @@ export default function DataTable({
             </tr>
           </thead>
         </table>
-        <div className="overflow-y-auto">
+        <div className="overflow-x-hidden">
           <table>
             <tbody>
               {data.slice(0, 20).map((item, index) => (
@@ -128,34 +124,42 @@ export default function DataTable({
                   <td className="px-4 py-3 w-1/12">
                     {formatDuration(item.duration)}
                   </td>
-                  <td className="flex gap-2 px-4 py-3 w-11/12">
+                  <td >
+                    <div onClick={(e) => e.stopPropagation()} className="flex gap-2 py-6">
+                     <div className="shrink-0">
+                     <button
+                        className={`bg-[#fdfdfd] bg-opacity-20 hover:bg-slate-400 text-black font-semibold ${isLiked(item) ? "bg-green-500 bg-opacity-80" : ""
+                          } `}
+                        onClick={() => handleLike(index)}
+                      >
+                        <Image src={like} alt="like" width={20} height={20} />
+                      </button>
+                     </div>
+
+                     <div className="shrink-0">
+                     <button
+                        className={`bg-[#fdfdfd] bg-opacity-20 hover:bg-slate-400 text-black font-semibold ${isDisliked(item) ? "bg-red-500 bg-opacity-80" : ""
+                          }`}
+                        onClick={() => handleDislike(index)}
+                      >
+                        <Image
+                          src={dislike}
+                          alt="dislike"
+                          width={20}
+                          height={20}
+                        />
+                      </button>
+                     </div>
+                     
+                    <div className="shrink-0">
                     <button
-                      className={`bg-[#fdfdfd] bg-opacity-20 hover:bg-slate-400 text-black font-semibold ${
-                        isLiked(item) ? "bg-green-500 bg-opacity-80" : ""
-                      } `}
-                      onClick={() => handleLike(index)}
-                    >
-                      <Image src={like} alt="like" width={100} height={100} />
-                    </button>
-                    <button
-                      className={`bg-[#fdfdfd] bg-opacity-20 hover:bg-slate-400 text-black font-semibold ${
-                        isDisliked(item) ? "bg-red-500 bg-opacity-80" : ""
-                      }`}
-                      onClick={() => handleDislike(index)}
-                    >
-                      <Image
-                        src={dislike}
-                        alt="dislike"
-                        width={100}
-                        height={100}
-                      />
-                    </button>
-                    <button
-                      className="text-slate-400 hover:text-white font-extralight"
-                      onClick={() => handleSkip(index)}
-                    >
-                      Skip
-                    </button>
+                        className="text-slate-400 hover:text-white text-[14px] font-extralight"
+                        onClick={() => handleSkip(index)}
+                      >
+                        Skip
+                      </button>
+                    </div>
+                    </div>
                   </td>
                 </tr>
               ))}

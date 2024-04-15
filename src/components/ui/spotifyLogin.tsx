@@ -65,7 +65,7 @@ function SpotifyLogin() {
     >
       <div className="text-white">
         <header className="App-header items-center flex justify-center flex-col gap-4 ">
-          <div className="self-center">
+          <div className="self-center mt-5">
             <Image width={100} height={100} src={logo} alt="SpotifyLogo" />
           </div>
           <h1 className="font-bold text-[28px]">Sign In</h1>

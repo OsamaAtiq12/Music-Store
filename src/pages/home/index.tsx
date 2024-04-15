@@ -50,8 +50,7 @@ function PlaylistUrlSubmissionForm() {
 
     try {
       const response = await axios.get(
-        `
-      https://api.spotify.com/v1/playlists/${playlistId}`,
+        `https://api.spotify.com/v1/playlists/${playlistId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -61,22 +60,28 @@ function PlaylistUrlSubmissionForm() {
 
       const playlists = response.data;
       setPlaylist(playlists);
-    } catch (error) {
-      console.error("Error fetching playlists:", error);
-      setError("Invalid URL"); // Set error message for invalid URL
-      setPlaylist(null); // Clear playlist if fetching fails
+    } catch (error: any) {
+      console.error("Error fetching playlists:", error.response.status);
+      if (error.response && error.response.status === 401) {
+        window.localStorage.removeItem("token");
+        window.localStorage.removeItem("expires_in");
+        router.push("/");
+
+      } else {
+        setError("Invalid URL"); // Set error message for invalid URL
+        setPlaylist(null); // Clear playlist if fetching fails
+      }
     } finally {
       setLoading(false); // Stop loading regardless of success or failure
     }
   };
-
   return (
     <Layout>
       <div style={{ height: "100vh", overflow: "hidden" }}>
         <div
           className={`flex flex-col items-center justify-center gap-5 h-full bg-gradient-to-tr from-black to-blue-950`}
         >
-          <div className="self-center">
+          <div className="self-center  mt-4">
             <Image width={100} height={100} src={logo} alt="SpotifyLogo" />
           </div>
           <Label htmlFor="terms">Enter Your Playlist Url Here</Label>
@@ -106,9 +111,9 @@ function PlaylistUrlSubmissionForm() {
             {!loading && playlist && (
               <>
                 <div className="flex justify-center p-5">
-                  <button onClick={()=>{
+                  <button onClick={() => {
                     router.push('/selection')
-                  
+
                   }} className="bg-[#1FDF64] flex gap-1 items-center px-5 rounded-[24px] py-2 text-black font-semibold">
                     <span>Next</span>
 
