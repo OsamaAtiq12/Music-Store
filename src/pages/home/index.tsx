@@ -81,7 +81,7 @@ function PlaylistUrlSubmissionForm() {
         <div
           className={`flex flex-col items-center justify-center gap-5 h-full bg-gradient-to-tr from-black to-blue-950`}
         >
-          <div className="self-center  mt-4">
+          <div className="self-center  mt-20">
             <Image width={100} height={100} src={logo} alt="SpotifyLogo" />
           </div>
           <Label htmlFor="terms">Enter Your Playlist Url Here</Label>

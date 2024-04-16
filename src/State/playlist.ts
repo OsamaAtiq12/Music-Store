@@ -10,3 +10,5 @@ export const dislikedTracksAtom = atom<any>([]);
 export const skippedTracksAtom = atom<any>([]);
 
 export const currentTrackAtom = atom<any>(null);
+
+export const selectedSongsAtom = atomWithStorage<any>("selectedSongs", null);

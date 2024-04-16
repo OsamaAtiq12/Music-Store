@@ -6,6 +6,7 @@ import { useAtom } from "jotai";
 import {
   likedTracksAtom,
   dislikedTracksAtom,
+  skippedTracksAtom,
   currentTrackAtom,
 } from "../../State/playlist";
 
@@ -23,8 +24,10 @@ export default function DataTable({
   const [selectedTrack, setSelectedTrack] = useAtom(currentTrackAtom);
   const [likedTracks, setLikedTracks] = useAtom(likedTracksAtom);
   const [dislikedTracks, setDislikedTracks] = useAtom(dislikedTracksAtom);
+  const [skippedTracks, setSkippedTracks] = useAtom(skippedTracksAtom);
   const [skippedRows, setSkippedRows] = useState<number[]>([]);
 
+  
   const formatDuration = (duration: number) => {
     const minutes = Math.floor(duration / 60000);
     const seconds = ((duration % 60000) / 1000).toFixed(0);
@@ -60,9 +63,11 @@ export default function DataTable({
   };
 
   const handleSkip = (index: number) => {
+    const track = data[index];
     const newData = [...data];
     newData.splice(index, 1);
     setFilteredData(newData);
+    setSkippedTracks([...skippedTracks, track]); // Add the skipped track to skippedTracksAtom
     setSkippedRows([...skippedRows, index]);
     onTrackAction(index);
   };

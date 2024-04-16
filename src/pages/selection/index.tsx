@@ -6,16 +6,45 @@ import {
   currentTrackAtom,
   likedTracksAtom,
   dislikedTracksAtom,
+  skippedTracksAtom,
+
+  selectedSongsAtom,
 } from "../../State/playlist";
 import { useAtom } from "jotai";
 import Player from "@/components/AudioPlayer/AudioPlayer";
 import Link from "next/link";
-
+interface Track {
+  trackId: string;
+}
 function Selection() {
   const [playlist] = useAtom<any>(playlistAtom);
-  const [currentTrack, setCurrentTrack] = useAtom<any>(currentTrackAtom);
-  const [likedTracks, setLikedTracks] = useAtom(likedTracksAtom);
-  const [dislikedTracks, setDislikedTracks] = useAtom(dislikedTracksAtom);
+
+
+  const [currentTrack] = useAtom<any>(currentTrackAtom);
+  const [, setselectedSongs] = useAtom(selectedSongsAtom);
+  const [likedTracks,] = useAtom(likedTracksAtom);
+  const [dislikedTracks,] = useAtom(dislikedTracksAtom);
+  const [skippedTracks,] = useAtom(skippedTracksAtom);
+  const mergedTracks = () => {
+    const mergedArray: { song_id: string; rating: number }[] = [];
+
+    // Add liked tracks with score 10
+    likedTracks.forEach((track: Track) => {
+      mergedArray.push({ song_id: track.trackId, rating: 10 });
+    });
+
+    // Add disliked tracks with score 0
+    dislikedTracks.forEach((track: Track) => {
+      mergedArray.push({ song_id: track.trackId, rating: 0 });
+    });
+
+    // Add skipped tracks with score 5
+    skippedTracks.forEach((track: Track) => {
+      mergedArray.push({ song_id: track.trackId, rating: 5 });
+    });
+
+    setselectedSongs(mergedArray)
+  };
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const shuffledTracks: any[] = useMemo(() => {
     if (playlist) {
@@ -41,7 +70,7 @@ function Selection() {
       albumImage: track.track.album.images[0].url,
       dateAdded: new Date(track.added_at).toLocaleDateString("en-US"),
       duration: track.track.duration_ms,
-      previewUrl: track.track.preview_url,
+      previewUrl: track.track.href,
       trackId: track.track.id,
     }))
   }, [shuffledTracks]);
@@ -54,7 +83,7 @@ function Selection() {
 
   return (
     <Layout>
-      <div className="flex flex-col items-center justify-center gap-5 bg-gradient-to-tr from-black to-blue-950">
+      <div className="flex flex-col items-center justify-center gap-5 bg-gradient-to-tr from-black to-blue-950 h-screen">
         <h1 className="text-white text-4xl font-bold mt-[100px]">
           Rate Tracks For Recommendations
         </h1>
@@ -70,7 +99,7 @@ function Selection() {
           />
 
           <div className="flex justify-center">
-            <button className="bg-[#1FDF64] flex gap-1 items-center px-5 rounded-[24px] py-2 text-black font-semibold">
+            <button onClick={mergedTracks} className="bg-[#1FDF64] flex gap-1 items-center px-5 rounded-[24px] py-2 text-black font-semibold">
               <Link href="/recommendation">Get Recommendations</Link>
             </button>
           </div>
