@@ -6,10 +6,10 @@ import background from "../../Assets/background.jpg";
 
 function SpotifyLogin() {
   const router = useRouter();
-  const CLIENT_ID = process.env.CLIENT_ID;
-  const REDIRECT_URI = process.env.REDIRECT_URI;
-  const AUTH_ENDPOINT = process.env.AUTH_ENDPOINT;
-
+  const CLIENT_ID = "4df63b7a0b764cc7855ac658356312f4";
+  const REDIRECT_URI = "http://localhost:3000";
+  const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
+  
   const SCOPES = [
     'playlist-read-collaborative',
     'playlist-modify-private',
@@ -36,6 +36,8 @@ function SpotifyLogin() {
       router.push('/home');
     }
   }, [token]);
+
+  
 
   useEffect(() => {
     const hash = window.location.hash;
