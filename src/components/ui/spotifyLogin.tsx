@@ -10,7 +10,23 @@ function SpotifyLogin() {
   const REDIRECT_URI = process.env.REDIRECT_URI;
   const AUTH_ENDPOINT = process.env.AUTH_ENDPOINT;
 
-  const SCOPES = 'playlist-read-private';
+  const SCOPES = [
+    'playlist-read-collaborative',
+    'playlist-modify-private',
+    'playlist-modify-public',
+    'playlist-read-private',
+    'user-follow-modify',
+    'user-follow-read',
+    'user-library-read',
+    'user-library-modify',
+    'user-read-email',
+    'user-read-private',
+    'user-read-playback-state',
+    'user-read-currently-playing',
+    'user-modify-playback-state',
+    'user-read-recently-played',
+    'user-top-read'
+  ]; 
   const AUTH_URL = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${encodeURIComponent(SCOPES)}&response_type=token`;
 
   const [token, setToken] = useState("");

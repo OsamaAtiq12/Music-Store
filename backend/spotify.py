@@ -257,7 +257,7 @@ def train_predict_and_create_playlist(
     # knn_grid.best_params_, knn_grid.best_score_
 
     # HIGH API CALLS ===================================================
-
+    print("Reached at HIGH API CALLS section")
     rec_tracks = []
     for i in play_listDF["id"].values.tolist():
         recommendations = sp.recommendations(
@@ -303,7 +303,7 @@ def train_predict_and_create_playlist(
     ]
 
     # MAKE PREDICTIONS =====================================
-
+    print("MAKE PREDICTIONS")
     tree_grid.best_estimator_.fit(X_train_last, y_train)
     rec_playlist_df_scaled = StandardScaler().fit_transform(rec_playlist_df)
     rec_playlist_df_pca = pca1.transform(rec_playlist_df_scaled)
@@ -311,11 +311,13 @@ def train_predict_and_create_playlist(
     y_pred_class = tree_grid.best_estimator_.predict(X_test_last)
 
     # FILTER OUT SONGS BASED ON THE RATINGS GIVEN TO IT BY THE AI =======================
+    print("FILTER OUT SONGS BASED ON THE RATINGS GIVEN TO IT BY THE AI")
     rec_playlist_df["ratings"] = y_pred_class
     rec_playlist_df = rec_playlist_df.sort_values("ratings", ascending=False)
     rec_playlist_df = rec_playlist_df.reset_index()
 
     # Pick the top ranking tracks to add your new playlist 9, 10 will work
+    print("Pick the top ranking tracks to add your new playlist 9, 10 will work")
     recs_to_add = rec_playlist_df[rec_playlist_df["ratings"] >= 8][
         "index"
     ].values.tolist()[:30]
@@ -328,6 +330,7 @@ def train_predict_and_create_playlist(
     )
     new_playlist_id = playlist_recs["id"]
     #  Add tracks to the new playlist
+    print("Add tracks to the new playlist")
     for i in rec_array:
         sp.user_playlist_add_tracks(sp.me()["id"], new_playlist_id, i)
 

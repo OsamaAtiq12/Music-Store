@@ -208,5 +208,6 @@ staticfiles/
 static/
 .env.production
 .vscode
+music_env
 
 .DS_Store
