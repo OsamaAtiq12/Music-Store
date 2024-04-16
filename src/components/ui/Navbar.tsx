@@ -17,9 +17,9 @@ const Navbar: React.FC = () => {
   const handleLogout = () => {
     // Clear token from local storage
     window.localStorage.removeItem("token");
-    // Redirect to "/"
-    router.push("/");
     setPlaylist(null);
+    router.push("/");
+
   };
 
   return (

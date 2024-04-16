@@ -33,31 +33,29 @@ export default function DataTable({
 
   const handleLike = (index: number) => {
     const track = data[index];
-    if (likedTracks.length >= 20) {
-      setLikedTracks([...likedTracks.slice(1), track]);
-    } else {
-      setLikedTracks([...likedTracks, track]);
-    }
+    const newData = [...data];
+    newData[index] = { ...track, liked: true }; // Mark the track as liked
+    setLikedTracks([...likedTracks, track]);
     setDislikedTracks(
       dislikedTracks.filter(
         (dTrack: { trackId: any }) => dTrack.trackId !== track.trackId
       )
     );
+    setFilteredData(newData); // Update the data with the liked track still present
     onTrackAction(index);
   };
 
   const handleDislike = (index: number) => {
     const track = data[index];
-    if (dislikedTracks.length >= 20) {
-      setDislikedTracks([...dislikedTracks.slice(1), track]);
-    } else {
-      setDislikedTracks([...dislikedTracks, track]);
-    }
+    const newData = [...data];
+    newData[index] = { ...track, disliked: true }; // Mark the track as disliked
+    setDislikedTracks([...dislikedTracks, track]);
     setLikedTracks(
       likedTracks.filter(
         (lTrack: { trackId: any }) => lTrack.trackId !== track.trackId
       )
     );
+    setFilteredData(newData); // Update the data with the disliked track still present
     onTrackAction(index);
   };
 
@@ -162,15 +160,7 @@ export default function DataTable({
                           />
                         </button>
                       </div>
-                      <div
-                        className={`shrink-0 ${
-                          skippedRows.includes(index) ||
-                          isLiked(item) ||
-                          isDisliked(item)
-                            ? "cursor-not-allowed"
-                            : ""
-                        }`}
-                      >
+                      <div className="shrink-0">
                         <button
                           className="text-slate-400 hover:text-white text-[14px] font-extralight italic pr-10"
                           onClick={(e) => {
@@ -178,23 +168,8 @@ export default function DataTable({
                             button.textContent = "skipped";
                             handleSkip(index);
                           }}
-                          disabled={
-                            skippedRows.includes(index) ||
-                            isLiked(item) ||
-                            isDisliked(item)
-                          }
                         >
-                          <span
-                            className={
-                              skippedRows.includes(index) ||
-                              isLiked(item) ||
-                              isDisliked(item)
-                                ? "cursor-not-allowed"
-                                : ""
-                            }
-                          >
-                            Skip
-                          </span>
+                          <span>Skip</span>
                         </button>
                       </div>
                     </div>

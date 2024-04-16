@@ -6,11 +6,11 @@ import background from "../../Assets/background.jpg";
 
 function SpotifyLogin() {
   const router = useRouter();
-  const CLIENT_ID = "4df63b7a0b764cc7855ac658356312f4";
+  const CLIENT_ID = process.env.CLIENT_ID;
   const REDIRECT_URI = "http://localhost:3000";
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
   
-  const SCOPES = [
+  const SCOPES= [
     'playlist-read-collaborative',
     'playlist-modify-private',
     'playlist-modify-public',
@@ -27,7 +27,7 @@ function SpotifyLogin() {
     'user-read-recently-played',
     'user-top-read'
   ]; 
-  const AUTH_URL = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${encodeURIComponent(SCOPES)}&response_type=token`;
+  const AUTH_URL = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${encodeURIComponent(SCOPES.join(' '))}&response_type=token`;
 
   const [token, setToken] = useState("");
  const [expiresIn, setExpiresIn] = useState("");
@@ -36,8 +36,6 @@ function SpotifyLogin() {
       router.push('/home');
     }
   }, [token]);
-
-  
 
   useEffect(() => {
     const hash = window.location.hash;
