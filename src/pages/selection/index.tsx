@@ -70,7 +70,7 @@ function Selection() {
       albumImage: track.track.album.images[0].url,
       dateAdded: new Date(track.added_at).toLocaleDateString("en-US"),
       duration: track.track.duration_ms,
-      previewUrl: track.track.href,
+      previewUrl: track.track.preview_url,
       trackId: track.track.id,
     }))
   }, [shuffledTracks]);
@@ -83,7 +83,7 @@ function Selection() {
 
   return (
     <Layout>
-      <div className="flex flex-col items-center justify-center gap-5 bg-gradient-to-tr from-black to-blue-950 h-screen">
+      <div className="flex flex-col items-center justify-center gap-5 bg-gradient-to-tr from-black to-blue-950 h-full">
         <h1 className="text-white text-4xl font-bold mt-[100px]">
           Rate Tracks For Recommendations
         </h1>

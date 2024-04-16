@@ -12,11 +12,10 @@ export default function handler(
 ) {
   const { playlist_id, selected_songs, token, playlist_name } = req.body;
 
-  // Generate a random playlist_id for demonstration purposes
-  const randomPlaylistId = Math.random().toString(36).substr(2, 9);
+ console.log("Payload Received:", req.body)
 
   // Simulate processing delay
   setTimeout(() => {
     res.status(200).json({ playlist_id: "5Atp90vWJuz6iQWEtoKCQ9" , message:`Successfully created playlist with ID: ${"5Atp90vWJuz6iQWEtoKCQ9"}` });
-  }, 2000); // 2 seconds delay, adjust as needed
+  }, 5000); // 2 seconds delay, adjust as needed
 }

@@ -54,6 +54,7 @@ function index() {
       token: token,
       playlist_name: newPlaylistname,
     };
+    console.log("Payload:", data)
 
     try {
       const response = await axios.post(`${ENDPOINT}`, data, {
@@ -66,8 +67,7 @@ function index() {
         window.localStorage.removeItem("token");
         router.push('/');
       } else {
-        // If the playlist generation was successful, make a call to Spotify API
-        const playlistId = response.data.playlistId; // Assuming your response contains the playlistId
+        // If the playlist generation was successful, make a call to Spotify API to get the playlist details
         const spotifyResponse = await axios.get(`https://api.spotify.com/v1/playlists/${response.data.playlist_id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -98,7 +98,7 @@ function index() {
     <Layout>
       <div style={{ height: "100vh", overflow: "hidden" }}>
         <div className="h-screen flex flex-col items-center justify-center gap-5 bg-gradient-to-tr from-black to-blue-950 ">
-          <Label htmlFor="terms">Enter Your New Playlist Name Here</Label>
+          <Label htmlFor="terms">Enter new playlist name:</Label>
           <div>
             <Input
               className="min-w-[50rem]"
