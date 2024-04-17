@@ -98,49 +98,55 @@ function index() {
     <Layout>
       <div style={{ height: "100vh", overflow: "hidden" }}>
         <div className="h-screen flex flex-col items-center justify-center gap-5 bg-gradient-to-tr from-black to-blue-950 ">
-          <Label htmlFor="terms">Enter new playlist name:</Label>
-          <div>
-            <Input
-              className="min-w-[50rem]"
-              type="text"
-              id="playlistUrl"
-              value={newPlaylistname}
-              onChange={(e) => setnewPlaylistname(e.target.value)}
-              required
-            />
-          </div>
-          {error && <p className="text-red-500">{error}</p>}
-          <button
-            onClick={handleSubmit}
-            className="bg-[#1FDF64] px-3 rounded-[24px] py-2 text-black font-semibold "
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? "Generating..." : "Generate Playlist"}
-          </button>
+          {newPlaylistData ? (
+            <>
+              <div className="mt-5 overflow-hidden max-w-[1400px]">
+                <Carousel data={newPlaylistData} />
+              </div>
+              <a
+                href={newPlaylistData.external_urls.spotify}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white mt-4 underline"
+              >
+                View Playlist on Spotify
+              </a>
+            </>
+          ) : (
+            <>
+              <Label htmlFor="terms">Enter new playlist name:</Label>
+              <div>
+                <Input
+                  className="min-w-[50rem]"
+                  type="text"
+                  id="playlistUrl"
+                  value={newPlaylistname}
+                  onChange={(e) => setnewPlaylistname(e.target.value)}
+                  required
+                />
+              </div>
+              {error && <p className="text-red-500">{error}</p>}
+              <button
+                onClick={handleSubmit}
+                className="bg-[#1FDF64] px-3 rounded-[24px] py-2 text-black font-semibold "
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? "Generating..." : "Generate Playlist"}
+              </button>
+            </>
+          )}
           {loading && (
             <div className="flex flex-col items-center">
               <Image src={Loader} alt="loading" width={50} height={50} />
               <p className="text-white">{loadingTexts[currentTextIndex]}</p>
             </div>
           )}
-          <div className="mt-5 overflow-hidden max-w-[1200px]">
-            {!loading && newPlaylistData !== undefined && <Carousel data={newPlaylistData} />}
-          </div>
-          {newPlaylistData && (
-            <a
-              href={newPlaylistData.external_urls.spotify}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white mt-4 underline"
-            >
-              View Playlist on Spotify
-            </a>
-          )}
         </div>
       </div>
     </Layout>
   );
+  
 }
 
 export default index;
