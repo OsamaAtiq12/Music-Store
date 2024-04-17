@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from "react";
 import Layout from "@/components/Layout/Layout";
 import { useAtom } from "jotai";
-import axios from 'axios';
-import {
-  selectedSongsAtom,
-  playlistAtom,
-} from "../../State/playlist";
-import { useRouter } from 'next/router';
+import axios from "axios";
+import { selectedSongsAtom, playlistAtom } from "../../State/playlist";
+import { useRouter } from "next/router";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Loader from "../../Assets/Loading.gif";
 import Image from "next/image";
 import Carousel from "@/components/ui/carousel";
 
-
-function index() {
+function GenAI() {
   const router = useRouter();
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedSongs,] = useAtom(selectedSongsAtom);
+  const [selectedSongs] = useAtom(selectedSongsAtom);
   const [playlist] = useAtom<any>(playlistAtom);
-  const [newPlaylistname, setnewPlaylistname] = useState('');
+  const [newPlaylistname, setnewPlaylistname] = useState("");
   const [token, setToken] = useState<string | null>(null);
   const [loadingTexts, setLoadingTexts] = useState<string[]>([
     "Sending request...",
@@ -34,7 +30,7 @@ function index() {
   const ENDPOINT = process.env.GENERATION_API_ENDPOINT;
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       setToken(window.localStorage.getItem("token"));
     }
   }, []);
@@ -54,31 +50,34 @@ function index() {
       token: token,
       playlist_name: newPlaylistname,
     };
-    console.log("Payload:", data)
+    console.log("Payload:", data);
 
     try {
       const response = await axios.post(`${ENDPOINT}`, data, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
       if (response.status === 401) {
         window.localStorage.removeItem("token");
-        router.push('/');
+        router.push("/");
       } else {
         // If the playlist generation was successful, make a call to Spotify API to get the playlist details
-        const spotifyResponse = await axios.get(`https://api.spotify.com/v1/playlists/${response.data.playlist_id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const spotifyResponse = await axios.get(
+          `https://api.spotify.com/v1/playlists/${response.data.playlist_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         // Set new playlist data
         setNewPlaylistData(spotifyResponse.data);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       setError("Failed to generate playlist");
     } finally {
       setLoading(false);
@@ -92,7 +91,6 @@ function index() {
 
     return () => clearInterval(timer);
   }, [loadingTexts]);
-
 
   return (
     <Layout>
@@ -146,7 +144,6 @@ function index() {
       </div>
     </Layout>
   );
-  
 }
 
-export default index;
+export default GenAI;
