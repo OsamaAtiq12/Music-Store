@@ -49,7 +49,7 @@ function index() {
     setError(""); // Clear any previous error
 
     const data = {
-      playlist_id: playlist.id,
+      playlist_id: `https://open.spotify.com/playlist/${playlist.id}`,
       selected_songs: [...selectedSongs],
       token: token,
       playlist_name: newPlaylistname,
