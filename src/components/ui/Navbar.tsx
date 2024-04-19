@@ -25,11 +25,17 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-black p-2 mt-0 w-full fixed  shadow-lg">
       <div className="container mx-auto flex flex-wrap items-center">
-        <div className="flex w-full md:w-1/2 justify-center md:justify-start text-white font-extrabold">
+        <div className="flex w-full md:w-1/2 justify-center md:justify-start gap-36 text-white ">
 
           <Link href="/">
-            <div className="text-white no-underline hover:text-white hover:no-underline">
+            <div className="text-white no-underline hover:text-white hover:no-underline items-center font-extrabold whitespace-nowrap">
               <span className="text-2xl pl-2"><i className="em em-grinning"></i> Music House</span>
+            </div>
+          </Link>
+
+          <Link href="/">
+            <div className="text-white no-underline hover:text-white hover:no-underline whitespace-nowrap">
+              <span className="text-2xl pl-2"><i className="em em-grinning"></i> Insta Tune</span>
             </div>
           </Link>
         </div>
